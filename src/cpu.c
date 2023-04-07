@@ -56,11 +56,11 @@ void init_cpu(struct cpu_t * cpu) {
 int run(struct cpu_t * cpu) {
 	/* Check if Program Counter point to the proper instruction */
 	struct pcb_t* proc = cpu->cur_proc;
-	--cpu->remaining_queue_time;
 
 	if (proc->pc >= proc->code->size) {
 		return 1;
 	}
+	--cpu->remaining_queue_time;
 	
 	struct inst_t ins = proc->code->text[proc->pc];
 	proc->pc++;
