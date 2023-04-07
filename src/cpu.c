@@ -1,6 +1,9 @@
 
 #include "cpu.h"
 #include "mem.h"
+#include "common.h"
+#define NULL 0
+#define MAX_PRIO 140
 
 static int calc(struct pcb_t * proc) {
 	return ((unsigned long)proc & 0UL);
@@ -44,8 +47,17 @@ static int write(
 	return write_mem(proc->regs[destination] + offset, proc, data);
 } 
 
-int run(struct pcb_t * proc) {
+void init_cpu(struct cpu_t * cpu) {
+	cpu->cur_proc = NULL;
+	cpu->cur_queue_id = 0;
+	cpu->remaining_queue_time = MAX_PRIO;
+}
+
+int run(struct cpu_t * cpu) {
 	/* Check if Program Counter point to the proper instruction */
+	struct pcb_t* proc = cpu->cur_proc;
+	--cpu->remaining_queue_time;
+
 	if (proc->pc >= proc->code->size) {
 		return 1;
 	}

@@ -1,14 +1,13 @@
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef SCHED_H
+#define SCHED_H
 
-#ifndef COMMON_H
+#include "cpu.h"
 #include "common.h"
+
+#define MAX_PRIO 140
+
 #endif
 
-#ifndef MLQ_SCHED
-#define MLQ_SCHED
-#define MAX_PRIO 140
-#endif
 
 int queue_empty(void);
 
@@ -16,7 +15,7 @@ void init_scheduler(void);
 void finish_scheduler(void);
 
 /* Get the next process from ready queue */
-struct pcb_t * get_proc(void);
+struct pcb_t * get_proc(struct cpu_t *);
 
 /* Put a process back to run queue */
 void put_proc(struct pcb_t * proc);
@@ -24,6 +23,5 @@ void put_proc(struct pcb_t * proc);
 /* Add a new process to ready queue */
 void add_proc(struct pcb_t * proc);
 
-#endif
 
 
