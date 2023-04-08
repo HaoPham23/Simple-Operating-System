@@ -57,6 +57,13 @@ static void * cpu_routine(void * args) {
 				id, cpu->cur_proc->pid);
 			put_proc(cpu->cur_proc);
 			cpu->cur_proc = get_proc(cpu);
+		} else if (cpu->remaining_queue_time <= 0) {
+			/* The current queue has run out of time slot */
+			time_left = 0;
+			printf("\tCPU %d: Put process %2d to run queue\n",
+				id, cpu->cur_proc->pid);
+			put_proc(cpu->cur_proc);
+			cpu->cur_proc = get_proc(cpu);
 		}
 		
 		/* Recheck process status after loading new process */
@@ -77,6 +84,7 @@ static void * cpu_routine(void * args) {
 		
 		/* Run current process */
 		run(cpu);
+		--cpu->remaining_queue_time;
 		time_left--;
 		next_slot(timer_id);
 	}
@@ -138,8 +146,10 @@ static void read_config(const char * path) {
 			if ((file_proc = fopen(ld_processes.path[i], "r")) == NULL) {
 				printf("Cannot find process description at '%s'\n", path);
 				exit(1);		
+			} else {
+				fscanf(file_proc, "%lu", &ld_processes.prio[i]);
+				fclose(file_proc);
 			}
-			fscanf(file_proc, "%u", &ld_processes.prio[i])
 		}
 	}
 }

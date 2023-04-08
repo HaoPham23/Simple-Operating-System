@@ -14,20 +14,13 @@ struct pcb_t * dequeue(struct queue_t * q) {
 	if (q->size == 0)
 		return NULL;
 
-	struct pcb_t* max_default_prio_proc = q->proc[0];
-	// int j = 0;
-
-	// for (int i = 1; i < q->size; ++i)
-	// 	if (max_default_prio_proc->prio > q->proc[i]->prio) {
-	// 		j = i;
-	// 		max_default_prio_proc = q->proc[i];
-	// 	}
+	struct pcb_t* proc = q->proc[0];
 	
 	for (int i = 0; i < q->size - 1; ++i)
 		q->proc[i] = q->proc[i + 1];
 	
 	--q->size;
 	
-	return max_default_prio_proc;
+	return proc;
 }
 
