@@ -138,8 +138,10 @@ static void read_config(const char * path) {
 			if ((file_proc = fopen(ld_processes.path[i], "r")) == NULL) {
 				printf("Cannot find process description at '%s'\n", path);
 				exit(1);		
+			} else {
+				fscanf(file_proc, "%u", &ld_processes.prio[i]);
+				fclose(ld_processes.path[i]);
 			}
-			fscanf(file_proc, "%u", &ld_processes.prio[i])
 		}
 	}
 }
