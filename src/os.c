@@ -134,7 +134,7 @@ static void read_config(const char * path) {
 		}
 		strcat(ld_processes.path[i], proc);
 		// If prio is not found, then set it equal the default priority of process
-		if (&ld_processes.prio[i] == -1) {
+		if (ld_processes.prio[i] == -1) {
 			if ((file_proc = fopen(ld_processes.path[i], "r")) == NULL) {
 				printf("Cannot find process description at '%s'\n", path);
 				exit(1);		
