@@ -116,6 +116,7 @@ static void * ld_routine(void * args) {
 
 static void read_config(const char * path) {
 	FILE * file;
+	FILE * file_proc;
 	if ((file = fopen(path, "r")) == NULL) {
 		printf("Cannot find configure file at %s\n", path);
 		exit(1);
@@ -132,8 +133,23 @@ static void read_config(const char * path) {
 		ld_processes.path[i][0] = '\0';
 		strcat(ld_processes.path[i], "input/proc/");
 		char proc[100];
-		fscanf(file, "%lu %s %lu\n", &ld_processes.start_time[i], proc, &ld_processes.prio[i]);
+		// fscanf(file, "%lu %s %lu\n", &ld_processes.start_time[i], proc, &ld_processes.prio[i]);
+		char line[100];
+		fgets(line, sizeof(line), file);
+		if (sscanf(line, "%lu %s %lu", &ld_processes.start_time[i], proc, &ld_processes.prio[i]) == 2) {
+			ld_processes.prio[i] = -1;
+		}
 		strcat(ld_processes.path[i], proc);
+		// If prio is not found, then set it equal the default priority of process
+		if (ld_processes.prio[i] == -1) {
+			if ((file_proc = fopen(ld_processes.path[i], "r")) == NULL) {
+				printf("Cannot find process description at '%s'\n", path);
+				exit(1);		
+			} else {
+				fscanf(file_proc, "%lu", &ld_processes.prio[i]);
+				fclose(file_proc);
+			}
+		}
 	}
 }
 
