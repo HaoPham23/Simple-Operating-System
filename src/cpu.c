@@ -60,8 +60,7 @@ int run(struct cpu_t * cpu) {
 	if (proc->pc >= proc->code->size) {
 		return 1;
 	}
-	--cpu->remaining_queue_time;
-	
+
 	struct inst_t ins = proc->code->text[proc->pc];
 	proc->pc++;
 	int stat = 1;

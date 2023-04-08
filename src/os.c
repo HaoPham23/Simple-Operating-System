@@ -84,6 +84,7 @@ static void * cpu_routine(void * args) {
 		
 		/* Run current process */
 		run(cpu);
+		--cpu->remaining_queue_time;
 		time_left--;
 		next_slot(timer_id);
 	}
