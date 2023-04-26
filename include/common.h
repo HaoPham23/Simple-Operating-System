@@ -5,6 +5,17 @@
 
 #include <stdint.h>
 
+/*New changes from part2
+
+#ifndef OSCFG_H
+#include "os-cfg.h"
+#endif
+
+#ifndef OSMM_H
+#include "os-mm.h"
+#endif
+*/
+
 #define ADDRESS_SIZE	20
 #define OFFSET_LEN	10
 #define FIRST_LV_LEN	5
@@ -68,6 +79,14 @@ struct pcb_t {
 	struct page_table_t * page_table; // Page table
 	uint32_t bp;	// Break pointer
 	uint32_t prio;
+	/* new changes from part2
+	#ifdef MM_PAGING
+	struct mm_struct *mm;
+	struct memphy_struct *mram;
+	struct memphy_struct **mswp;
+	struct memphy_struct *active_mswp;
+	#endif
+	*/
 };
 
 #endif

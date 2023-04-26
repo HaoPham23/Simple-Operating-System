@@ -42,6 +42,9 @@ static addr_t get_second_lv(addr_t addr) {
 static struct trans_table_t * get_trans_table(
 		addr_t index, 	// Segment level index
 		struct page_table_t * page_table) { // first level table
+	/*
+		In part 2, we DO NOTHING HERE. This mem is obsoleted
+	*/
 	
 	/*
 	 * TODO: Given the Segment index [index], you must go through each
@@ -49,7 +52,6 @@ static struct trans_table_t * get_trans_table(
 	 * field of the row is equal to the index
 	 *
 	 * */
-
 	int i;
 	for (i = 0; i < page_table->size; i++) {
 		// Enter your code here
@@ -83,11 +85,17 @@ static int translate(
 	int i;
 	for (i = 0; i < trans_table->size; i++) {
 		if (trans_table->table[i].v_index == second_lv) {
+			/*
+				In part 2, we DO NOTHING HERE. This mem is obsoleted
+			*/
+			
 			/* TODO: Concatenate the offset of the virtual addess
 			 * to [p_index] field of trans_table->table[i] to 
 			 * produce the correct physical address and save it to
 			 * [*physical_addr]  */
-			*physical_addr = offset /* (TODo) + translated_based_address */;
+			 
+			//Comment out the following line in part 2 too
+			//*physical_addr = offset /* (TODo) + translated_based_address */;
 			return 1;
 		}
 	}
@@ -97,6 +105,10 @@ static int translate(
 addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	pthread_mutex_lock(&mem_lock);
 	addr_t ret_mem = 0;
+	/*
+		In part 2, we DO NOTHING HERE. This mem is obsoleted
+	*/
+	
 	/* TODO: Allocate [size] byte in the memory for the
 	 * process [proc] and save the address of the first
 	 * byte in the allocated memory region to [ret_mem].
@@ -131,6 +143,10 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 }
 
 int free_mem(addr_t address, struct pcb_t * proc) {
+	/*
+		In part 2, we DO NOTHING HERE. This mem is obsoleted
+	*/
+
 	/*TODO: Release memory region allocated by [proc]. The first byte of
 	 * this region is indicated by [address]. Task to do:
 	 * 	- Set flag [proc] of physical page use by the memory block

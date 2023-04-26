@@ -1,6 +1,8 @@
 
 #include "queue.h"
 #include "sched.h"
+
+/*In part 2, do not include "cpu.h"*/
 #include "cpu.h"
 #include <pthread.h>
 
@@ -8,6 +10,14 @@
 #include <stdio.h>
 
 #define MAX_PRIO 140
+
+/* from part 2
+static struct queue_t ready_queue;
+static struct queue_t run_queue;
+#ifdef MLQ_SCHED
+static struct queue_t mlq_ready_queue[MAX_PRIO];
+#endif
+*/
 
 static pthread_mutex_t queue_lock;
 
@@ -21,12 +31,40 @@ int queue_empty(void) {
 	return 1;
 }
 
+/*
+int queue_empty(void) {
+#ifdef MLQ_SCHED
+	unsigned long prio;
+	for (prio = 0; prio < MAX_PRIO; prio++)
+		if(!empty(&mlq_ready_queue[prio])) 
+			return -1;
+#endif
+	return (empty(&ready_queue) && empty(&run_queue));
+}
+*/
+
 void init_scheduler(void) {
     int i ;
 
 	for (i = 0; i < MAX_PRIO; i ++)
 		mlq_ready_queue[i].size = 0;
 }
+
+
+/*
+void init_scheduler(void) {
+#ifdef MLQ_SCHED
+    int i ;
+
+	for (i = 0; i < MAX_PRIO; i ++)
+		mlq_ready_queue[i].size = 0;
+#endif
+	ready_queue.size = 0;
+	run_queue.size = 0;
+	pthread_mutex_init(&queue_lock, NULL);
+}
+*/
+
 
 /* 
  *  Stateful design for routine calling
@@ -83,3 +121,29 @@ void put_proc(struct pcb_t * proc) {
 void add_proc(struct pcb_t * proc) {
 	return add_mlq_proc(proc);
 }
+/*from part 2
+#else
+struct pcb_t * get_proc(void) {
+	struct pcb_t * proc = NULL;
+	//TODO: get a process from [ready_queue].
+	 // Remember to use lock to protect the queue.
+	 //
+	return proc;
+}
+
+void put_proc(struct pcb_t * proc) {
+	pthread_mutex_lock(&queue_lock);
+	enqueue(&run_queue, proc);
+	pthread_mutex_unlock(&queue_lock);
+}
+
+void add_proc(struct pcb_t * proc) {
+	pthread_mutex_lock(&queue_lock);
+	enqueue(&ready_queue, proc);
+	pthread_mutex_unlock(&queue_lock);	
+}
+#endif
+*/
+
+
+

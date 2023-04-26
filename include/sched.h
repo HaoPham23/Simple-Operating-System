@@ -1,13 +1,23 @@
 #ifndef SCHED_H
 #define SCHED_H
 
+/*
+#ifndef QUEUE_H
+#define QUEUE_H
+*/
+
 #include "cpu.h"
 #include "common.h"
 
 #define MAX_PRIO 140
 
+/* new changes from part2
+#ifndef MLQ_SCHED
+#define MLQ_SCHED
 #endif
 
+#define MAX_PRIO 139
+*/
 
 int queue_empty(void);
 
@@ -24,4 +34,5 @@ void put_proc(struct pcb_t * proc);
 void add_proc(struct pcb_t * proc);
 
 
+#endif
 
