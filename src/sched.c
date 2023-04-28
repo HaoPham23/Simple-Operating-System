@@ -1,6 +1,8 @@
 
 #include "queue.h"
 #include "sched.h"
+
+/*In part 2, do not include "cpu.h"*/
 #include "cpu.h"
 #include <pthread.h>
 
@@ -24,6 +26,27 @@ int queue_empty(void) {
 	return (empty(&ready_queue) && empty(&run_queue));
 }
 
+/*
+int queue_empty(void) {
+#ifdef MLQ_SCHED
+	unsigned long prio;
+	for (prio = 0; prio < MAX_PRIO; prio++)
+		if(!empty(&mlq_ready_queue[prio])) 
+			return -1;
+#endif
+	return (empty(&ready_queue) && empty(&run_queue));
+}
+*/
+
+void init_scheduler(void) {
+    int i ;
+
+	for (i = 0; i < MAX_PRIO; i ++)
+		mlq_ready_queue[i].size = 0;
+}
+
+
+/*
 void init_scheduler(void) {
 #ifdef MLQ_SCHED
     int i ;
@@ -35,6 +58,8 @@ void init_scheduler(void) {
 	run_queue.size = 0;
 	pthread_mutex_init(&queue_lock, NULL);
 }
+*/
+
 
 #ifdef MLQ_SCHED
 /* 

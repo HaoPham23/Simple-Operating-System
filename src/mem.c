@@ -42,6 +42,9 @@ static addr_t get_second_lv(addr_t addr) {
 static struct trans_table_t * get_trans_table(
 		addr_t index, 	// Segment level index
 		struct page_table_t * page_table) { // first level table
+	/*
+		In part 2, we DO NOTHING HERE. This mem is obsoleted
+	*/
 	
 	/* DO NOTHING HERE. This mem is obsoleted */
 

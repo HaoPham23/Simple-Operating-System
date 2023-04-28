@@ -62,6 +62,7 @@ int run(struct cpu_t * cpu) {
 	struct inst_t ins = proc->code->text[proc->pc];
 	proc->pc++;
 	int stat = 1;
+	//changes from part 2: add ifdef MM_PAGING
 	switch (ins.opcode) {
 	case CALC:
 		stat = calc(proc);
@@ -69,7 +70,6 @@ int run(struct cpu_t * cpu) {
 	case ALLOC:
 #ifdef MM_PAGING
 		stat = pgalloc(proc, ins.arg_0, ins.arg_1);
-
 #else
 		stat = alloc(proc, ins.arg_0, ins.arg_1);
 #endif
@@ -99,6 +99,7 @@ int run(struct cpu_t * cpu) {
 		stat = 1;
 	}
 	return stat;
+
 
 }
 

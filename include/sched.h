@@ -1,6 +1,11 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+/*
+#ifndef QUEUE_H
+#define QUEUE_H
+*/
+
 #include "cpu.h"
 #include "common.h"
 
@@ -26,4 +31,5 @@ void add_proc(struct pcb_t * proc);
 
 #endif
 
+#endif
 

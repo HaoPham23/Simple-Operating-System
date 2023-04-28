@@ -14,6 +14,17 @@
 #include "os-mm.h"
 #endif
 
+/*New changes from part2
+
+#ifndef OSCFG_H
+#include "os-cfg.h"
+#endif
+
+#ifndef OSMM_H
+#include "os-mm.h"
+#endif
+*/
+
 #define ADDRESS_SIZE	20
 #define OFFSET_LEN	10
 #define FIRST_LV_LEN	5
@@ -84,7 +95,6 @@ struct pcb_t {
 #endif
 	struct page_table_t * page_table; // Page table
 	uint32_t bp;	// Break pointer
-
 };
 
 #endif
