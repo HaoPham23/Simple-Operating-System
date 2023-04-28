@@ -18,7 +18,7 @@ static struct {
 static pthread_mutex_t mem_lock;
 
 void init_mem(void) {
-	memset(_mem_stat, 0, sizeof(*_mem_stat) * NUM_PAGES);
+	memset(_mem_stat, 0, sizeof(_mem_stat) * NUM_PAGES);
 	memset(_ram, 0, sizeof(BYTE) * RAM_SIZE);
 	pthread_mutex_init(&mem_lock, NULL);
 }
@@ -43,12 +43,7 @@ static struct trans_table_t * get_trans_table(
 		addr_t index, 	// Segment level index
 		struct page_table_t * page_table) { // first level table
 	
-	/*
-	 * TODO: Given the Segment index [index], you must go through each
-	 * row of the segment table [page_table] and check if the v_index
-	 * field of the row is equal to the index
-	 *
-	 * */
+	/* DO NOTHING HERE. This mem is obsoleted */
 
 	int i;
 	for (i = 0; i < page_table->size; i++) {
@@ -68,6 +63,7 @@ static int translate(
 
 	/* Offset of the virtual address */
 	addr_t offset = get_offset(virtual_addr);
+        offset++; offset--;
 	/* The first layer index */
 	addr_t first_lv = get_first_lv(virtual_addr);
 	/* The second layer index */
@@ -83,11 +79,7 @@ static int translate(
 	int i;
 	for (i = 0; i < trans_table->size; i++) {
 		if (trans_table->table[i].v_index == second_lv) {
-			/* TODO: Concatenate the offset of the virtual addess
-			 * to [p_index] field of trans_table->table[i] to 
-			 * produce the correct physical address and save it to
-			 * [*physical_addr]  */
-			*physical_addr = offset /* (TODo) + translated_based_address */;
+			/* DO NOTHING HERE. This mem is obsoleted */
 			return 1;
 		}
 	}
@@ -97,10 +89,7 @@ static int translate(
 addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	pthread_mutex_lock(&mem_lock);
 	addr_t ret_mem = 0;
-	/* TODO: Allocate [size] byte in the memory for the
-	 * process [proc] and save the address of the first
-	 * byte in the allocated memory region to [ret_mem].
-	 * */
+	/* DO NOTHING HERE. This mem is obsoleted */
 
 	uint32_t num_pages = (size % PAGE_SIZE) ? size / PAGE_SIZE :
 		size / PAGE_SIZE + 1; // Number of pages we will use
@@ -131,14 +120,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 }
 
 int free_mem(addr_t address, struct pcb_t * proc) {
-	/*TODO: Release memory region allocated by [proc]. The first byte of
-	 * this region is indicated by [address]. Task to do:
-	 * 	- Set flag [proc] of physical page use by the memory block
-	 * 	  back to zero to indicate that it is free.
-	 * 	- Remove unused entries in segment table and page tables of
-	 * 	  the process [proc].
-	 * 	- Remember to use lock to protect the memory from other
-	 * 	  processes.  */
+	/* DO NOTHING HERE. This mem is obsoleted */
 	return 0;
 }
 

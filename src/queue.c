@@ -3,15 +3,16 @@
 #include "queue.h"
 
 int empty(struct queue_t * q) {
+        if (q == NULL) return 1;
 	return (q->size == 0);
 }
 
 void enqueue(struct queue_t * q, struct pcb_t * proc) {
-	q->proc[q->size++] = proc;	
+        q->proc[q->size++] = proc;
 }
 
 struct pcb_t * dequeue(struct queue_t * q) {
-	if (q->size == 0)
+        if (q->size == 0)
 		return NULL;
 
 	struct pcb_t* proc = q->proc[0];

@@ -1,15 +1,13 @@
 
 #include "cpu.h"
 #include "mem.h"
-#include "common.h"
-#define NULL 0
-#define MAX_PRIO 140
+#include "mm.h"
 
-static int calc(struct pcb_t * proc) {
+int calc(struct pcb_t * proc) {
 	return ((unsigned long)proc & 0UL);
 }
 
-static int alloc(struct pcb_t * proc, uint32_t size, uint32_t reg_index) {
+int alloc(struct pcb_t * proc, uint32_t size, uint32_t reg_index) {
 	addr_t addr = alloc_mem(size, proc);
 	if (addr == 0) {
 		return 1;
@@ -19,11 +17,11 @@ static int alloc(struct pcb_t * proc, uint32_t size, uint32_t reg_index) {
 	}
 }
 
-static int free_data(struct pcb_t * proc, uint32_t reg_index) {
+int free_data(struct pcb_t * proc, uint32_t reg_index) {
 	return free_mem(proc->regs[reg_index], proc);
 }
 
-static int read(
+int read(
 		struct pcb_t * proc, // Process executing the instruction
 		uint32_t source, // Index of source register
 		uint32_t offset, // Source address = [source] + [offset]
@@ -38,7 +36,7 @@ static int read(
 	}
 }
 
-static int write(
+int write(
 		struct pcb_t * proc, // Process executing the instruction
 		BYTE data, // Data to be wrttien into memory
 		uint32_t destination, // Index of destination register
@@ -56,11 +54,11 @@ void init_cpu(struct cpu_t * cpu) {
 int run(struct cpu_t * cpu) {
 	/* Check if Program Counter point to the proper instruction */
 	struct pcb_t* proc = cpu->cur_proc;
-
+	
 	if (proc->pc >= proc->code->size) {
 		return 1;
 	}
-
+	
 	struct inst_t ins = proc->code->text[proc->pc];
 	proc->pc++;
 	int stat = 1;
@@ -69,16 +67,33 @@ int run(struct cpu_t * cpu) {
 		stat = calc(proc);
 		break;
 	case ALLOC:
+#ifdef MM_PAGING
+		stat = pgalloc(proc, ins.arg_0, ins.arg_1);
+
+#else
 		stat = alloc(proc, ins.arg_0, ins.arg_1);
+#endif
 		break;
 	case FREE:
+#ifdef MM_PAGING
+		stat = pgfree_data(proc, ins.arg_0);
+#else
 		stat = free_data(proc, ins.arg_0);
+#endif
 		break;
 	case READ:
+#ifdef MM_PAGING
+		stat = pgread(proc, ins.arg_0, ins.arg_1, ins.arg_2);
+#else
 		stat = read(proc, ins.arg_0, ins.arg_1, ins.arg_2);
+#endif
 		break;
 	case WRITE:
+#ifdef MM_PAGING
+		stat = pgwrite(proc, ins.arg_0, ins.arg_1, ins.arg_2);
+#else
 		stat = write(proc, ins.arg_0, ins.arg_1, ins.arg_2);
+#endif
 		break;
 	default:
 		stat = 1;

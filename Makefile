@@ -1,6 +1,6 @@
 
 INC = -Iinclude
-LIB = -lpthread -pthread
+LIB = -lpthread
 
 SRC = src
 OBJ = obj
@@ -18,8 +18,8 @@ MAKE = $(CC) $(INC)
 
 # Object files needed by modules
 MEM_OBJ = $(addprefix $(OBJ)/, paging.o mem.o cpu.o loader.o)
-OS_OBJ = $(addprefix $(OBJ)/, mem.o cpu.o loader.o queue.o os.o sched.o timer.o)
-SCHED_OBJ = $(addprefix $(OBJ)/, cpu.o loader.o mem.o queue.o os.o sched.o timer.o)
+OS_OBJ = $(addprefix $(OBJ)/, cpu.o mem.o loader.o queue.o os.o sched.o timer.o mm-vm.o mm.o mm-memphy.o)
+SCHED_OBJ = $(addprefix $(OBJ)/, cpu.o loader.o)
 HEADER = $(wildcard $(INCLUDE)/*.h)
 
 all: os
@@ -45,9 +45,6 @@ $(OBJ):
 	mkdir -p $(OBJ)
 
 clean:
-	rm -f $(OBJ)/*.o os
-#       sched mem
+	rm -f $(OBJ)/*.o os sched mem
 	rm -r $(OBJ)
-
-
 
