@@ -8,6 +8,7 @@
 
 #include "mm.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /*
  *  MEMPHY_mv_csr - move MEMPHY cursor
@@ -161,8 +162,8 @@ int MEMPHY_get_freefp(struct memphy_struct *mp, int *retfpn)
 
 int MEMPHY_dump(struct memphy_struct * mp)
 {
-    for (int i = 0; i < mp->maxsz; ++i)
-      printf("%08ld: %x\n", i, mp->storage[i]);
+    //for (int i = 0; i < mp->maxsz; ++i)
+    //  printf("%08d: %x\n", i, mp->storage[i]);
 
     return 0;
 }
