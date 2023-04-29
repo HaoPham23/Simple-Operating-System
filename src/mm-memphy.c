@@ -37,7 +37,8 @@ int MEMPHY_seq_read(struct memphy_struct *mp, int addr, BYTE *value)
    if (mp == NULL)
      return -1;
 
-   if (!mp->rdmflg)
+   //Previously: !mp->rdmflg
+   if (mp->rdmflg)
      return -1; /* Not compatible mode for sequential read */
 
    MEMPHY_mv_csr(mp, addr);
@@ -77,8 +78,9 @@ int MEMPHY_seq_write(struct memphy_struct * mp, int addr, BYTE value)
    if (mp == NULL)
      return -1;
 
-   if (!mp->rdmflg)
-     return -1; /* Not compatible mode for sequential read */
+   //Previously: !mp->rdmflg
+   if (mp->rdmflg)
+     return -1; /* Not compatible mode for sequential write */
 
    MEMPHY_mv_csr(mp, addr);
    mp->storage[addr] = value;

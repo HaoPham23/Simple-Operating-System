@@ -51,7 +51,7 @@ struct vm_area_struct *get_vma_by_num(struct mm_struct *mm, int vmaid)
 
     pvma = pvma->vm_next;
 
-    ++vmait;  // missing !?
+    ++vmait;  //Previously: missing !?
   }
 
   return pvma;
@@ -358,7 +358,8 @@ int free_pcb_memph(struct pcb_t *caller)
   {
     pte= caller->mm->pgd[pagenum];
 
-    if (!PAGING_PAGE_PRESENT(pte))
+    //Previously: !PAGING_PAGE_PRESENT(pte)
+    if (PAGING_PAGE_PRESENT(pte))
     {
       fpn = PAGING_FPN(pte);
       MEMPHY_put_freefp(caller->mram, fpn);
