@@ -88,19 +88,21 @@ int vmap_page_range(struct pcb_t *caller, // process call
               struct vm_rg_struct *ret_rg)// return mapped region, the real mapped fp
 {                                         // no guarantee all given pages are mapped
   //uint32_t * pte = malloc(sizeof(uint32_t));
-  struct framephy_struct *fpit = malloc(sizeof(struct framephy_struct));
+  struct framephy_struct *fpit = frames;
   //int  fpn;
   int pgit = 0;
   int pgn = PAGING_PGN(addr);
 
   ret_rg->rg_end = ret_rg->rg_start = addr; // at least the very first space is usable
 
-  fpit->fp_next = frames;
-
-  /* TODO map range of frame to address space 
+  /* Map range of frame to address space 
    *      [addr to addr + pgnum*PAGING_PAGESZ
    *      in page table caller->mm->pgd[]
    */
+  for (int i = pgn; i < pgn + pgnum; ++i) {
+    pte_set_fpn(&caller->mm->pgd[i], fpit->fpn);
+    fpit = fpit->fp_next;
+  }
 
    /* Tracking for later page replacement activities (if needed)
     * Enqueue new usage page */
@@ -120,16 +122,27 @@ int vmap_page_range(struct pcb_t *caller, // process call
 int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struct** frm_lst)
 {
   int pgit, fpn;
-  //struct framephy_struct *newfp_str;
+  struct framephy_struct *newfp_str = NULL;
 
   for(pgit = 0; pgit < req_pgnum; pgit++)
   {
     if(MEMPHY_get_freefp(caller->mram, &fpn) == 0)
    {
-     
+      struct framephy_struct *newfp = malloc(sizeof(struct framephy_struct));
+      newfp->fpn = fpn;
+      newfp->owner = caller->mm;
+      newfp->fp_next = newfp_str;
+      newfp_str = newfp;
    } else {  // ERROR CODE of obtaining somes but not enough frames
+      for (struct framephy_struct* cur = newfp_str; cur != NULL; ) {
+        struct framephy_struct* tmp = cur->fp_next;
+        free(cur);
+        cur = tmp;
+      }
+      return -3000;
    } 
  }
+  *frm_lst = newfp_str;
 
   return 0;
 }
