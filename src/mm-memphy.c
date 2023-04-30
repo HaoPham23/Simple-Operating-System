@@ -1,4 +1,5 @@
 #include "os-mm.h"
+#include <pthread.h>
 
 #ifdef MM_PAGING
 /*
@@ -144,6 +145,8 @@ int MEMPHY_format(struct memphy_struct *mp, int pagesz)
 
 int MEMPHY_get_freefp(struct memphy_struct *mp, int *retfpn)
 {
+   pthread_mutex_lock(&mp->lock);
+
    struct framephy_struct *fp = mp->free_fp_list;
 
    if (fp == NULL)
@@ -157,6 +160,7 @@ int MEMPHY_get_freefp(struct memphy_struct *mp, int *retfpn)
     */
    free(fp);
 
+   pthread_mutex_unlock(&mp->lock);
    return 0;
 }
 
@@ -170,6 +174,7 @@ int MEMPHY_dump(struct memphy_struct * mp)
 
 int MEMPHY_put_freefp(struct memphy_struct *mp, int fpn)
 {
+   pthread_mutex_lock(&mp->lock);
    struct framephy_struct *fp = mp->free_fp_list;
    struct framephy_struct *newnode = malloc(sizeof(struct framephy_struct));
 
@@ -177,7 +182,7 @@ int MEMPHY_put_freefp(struct memphy_struct *mp, int fpn)
    newnode->fpn = fpn;
    newnode->fp_next = fp;
    mp->free_fp_list = newnode;
-
+   pthread_mutex_unlock(&mp->lock);
    return 0;
 }
 
@@ -189,6 +194,7 @@ int init_memphy(struct memphy_struct *mp, int max_size, int randomflg)
 {
    mp->storage = (BYTE *)malloc(max_size*sizeof(BYTE));
    mp->maxsz = max_size;
+   pthread_mutex_init(&mp->lock, NULL);
 
    MEMPHY_format(mp,PAGING_PAGESZ);
 

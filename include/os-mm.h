@@ -5,6 +5,8 @@
 #define PAGING_MAX_MMSWP 4 /* max number of supported swapped space */
 #define PAGING_MAX_SYMTBL_SZ 30
 
+#include <pthread.h>
+
 typedef char BYTE;
 typedef unsigned int uint32_t;
 typedef uint32_t addr_t;
@@ -72,7 +74,7 @@ struct memphy_struct {
    /* Basic field of data and size */
    BYTE *storage;
    int maxsz;
-   
+   pthread_mutex_t lock;
    /* Sequential device fields */ 
    int rdmflg;
    int cursor;
