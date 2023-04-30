@@ -134,11 +134,6 @@ int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struc
       newfp->fp_next = newfp_str;
       newfp_str = newfp;
    } else {  // ERROR CODE of obtaining somes but not enough frames
-      for (struct framephy_struct* cur = newfp_str; cur != NULL; ) {
-        struct framephy_struct* tmp = cur->fp_next;
-        free(cur);
-        cur = tmp;
-      }
       return -3000;
    } 
  }
