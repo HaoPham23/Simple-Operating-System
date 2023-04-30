@@ -64,7 +64,9 @@ static void * cpu_routine(void * args) {
 			/* The porcess has finish it job */
 			printf("\tCPU %d: Processed %2d has finished\n",
 				id , cpu->cur_proc->pid);
+			free_pcb_memph(cpu->cur_proc);
 			free(cpu->cur_proc);
+			
 			cpu->cur_proc = get_proc(cpu);
 			time_left = 0;
 		}else if (time_left == 0) {

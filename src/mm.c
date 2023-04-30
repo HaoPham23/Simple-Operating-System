@@ -99,7 +99,7 @@ int vmap_page_range(struct pcb_t *caller, // process call
    *      [addr to addr + pgnum*PAGING_PAGESZ
    *      in page table caller->mm->pgd[]
    */
-  for (int pgit = 0; pgit < pgnum; ++pgit) {
+  for (pgit = 0; pgit < pgnum; ++pgit) {
     pte_set_fpn(&caller->mm->pgd[pgn + pgit], fpit->fpn);
     fpit = fpit->fp_next;
 
