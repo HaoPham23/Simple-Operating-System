@@ -168,7 +168,7 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
 {
   uint32_t pte = mm->pgd[pgn];
  
-  if (!PAGING_PAGE_PRESENT(pte) && (pte & PAGING_PTE_SWAPPED_MASK))
+  if (!PAGING_PAGE_PRESENT(pte))
   { /* Page is not online, make it actively living */
     int vicpgn, swpfpn;
     int vicfpn;
@@ -197,9 +197,6 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
     pte_set_fpn(&caller->mm->pgd[pgn], vicfpn);
 
     enlist_pgn_node(&caller->mm->fifo_pgn,pgn);
-  }
-  else if (!PAGING_PAGE_PRESENT(pte) && !(pte & PAGING_PTE_SWAPPED_MASK)) {
-    
   }
 
   *fpn = PAGING_FPN(mm->pgd[pgn]);
@@ -425,7 +422,7 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
   struct vm_rg_struct *area = get_vm_area_node_at_brk(caller, vmaid, inc_sz, inc_amt);
   struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
 
-  int old_end = cur_vma->vm_end;
+  int old_sbrk = cur_vma->sbrk;
 
   /*Validate overlap of obtained region */
   if (validate_overlap_vm_area(caller, vmaid, area->rg_start, area->rg_end) < 0) {
@@ -435,12 +432,12 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
 
   /* The obtained vm area (only) 
    * now will be alloc real ram region */
-  cur_vma->sbrk += inc_sz;
+  cur_vma->sbrk += inc_amt;
   cur_vma->vm_end = cur_vma->sbrk;
   enlist_vm_freerg_list(caller->mm, area);
 
   if (vm_map_ram(caller, area->rg_start, area->rg_end, 
-                    old_end, incnumpage , newrg) < 0)
+                    old_sbrk, incnumpage , newrg) < 0)
     return -1; /* Map the memory to MEMRAM */
 
   return 0;
