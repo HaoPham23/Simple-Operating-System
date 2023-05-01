@@ -38,7 +38,7 @@ os: $(OS_OBJ)
 	$(MAKE) $(LFLAGS) $(OS_OBJ) -o os $(LIB)
 
 $(OBJ)/%.o: %.c ${HEADER} $(OBJ)
-	$(MAKE) $(CFLAGS) $< -o $@
+	$(MAKE) $(CFLAGS) $< -o $@ $(LIB)
 
 # Prepare objectives container
 $(OBJ):
