@@ -1,6 +1,6 @@
 
 #include "queue.h"
-#include "sched.h"
+#include "sche.h"
 
 /*In part 2, do not include "cpu.h"*/
 #include "cpu.h"
