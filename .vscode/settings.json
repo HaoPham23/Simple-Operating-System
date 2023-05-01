@@ -2,6 +2,10 @@
     "files.associations": {
         "sche.h": "c",
         "queue.h": "c",
-        "features.h": "c"
+        "features.h": "c",
+        "pthread.h": "c",
+        "time.h": "c",
+        "pthread_stack_min-dynamic.h": "c",
+        "sched.h": "c"
     }
 }

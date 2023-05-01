@@ -107,7 +107,6 @@ int MEMPHY_write(struct memphy_struct * mp, int addr, BYTE data)
       mp->storage[addr] = data;
    else /* Sequential access device */
       return MEMPHY_seq_write(mp, addr, data);
-
    return 0;
 }
 
@@ -166,10 +165,7 @@ int MEMPHY_get_freefp(struct memphy_struct *mp, int *retfpn)
 
 int MEMPHY_dump(struct memphy_struct * mp)
 {
-    //for (int i = 0; i < mp->maxsz; ++i)
-    //  printf("%08d: %x\n", i, mp->storage[i]);
-
-    return 0;
+   return 0;
 }
 
 int MEMPHY_put_freefp(struct memphy_struct *mp, int fpn)

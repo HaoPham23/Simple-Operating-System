@@ -108,6 +108,13 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
   caller->mm->symrgtbl[rgid].rg_start = old_sbrk;
   caller->mm->symrgtbl[rgid].rg_end = old_sbrk + size;
 
+  if (old_sbrk + size < cur_vma->sbrk) {
+    struct vm_rg_struct* residual_rg = malloc(sizeof(struct vm_rg_struct));
+    residual_rg->rg_start = old_sbrk + size + 1;
+    residual_rg->rg_end = cur_vma->sbrk;
+    enlist_vm_freerg_list(caller->mm, residual_rg);
+  }
+
   *alloc_addr = old_sbrk;
 
   return 0;
@@ -141,7 +148,6 @@ int __free(struct pcb_t *caller, int vmaid, int rgid)
 int pgalloc(struct pcb_t *proc, uint32_t size, uint32_t reg_index)
 {
   int addr;
-
   /* By default using vmaid = 0 */
   return __alloc(proc, 0, reg_index, size, &addr);
 }
@@ -242,7 +248,7 @@ int pg_setval(struct mm_struct *mm, int addr, BYTE value, struct pcb_t *caller)
   /* Get the page to MEMRAM, swap from MEMSWAP if needed */
   if(pg_getpage(mm, pgn, &fpn, caller) != 0) 
     return -1; /* invalid page access */
-
+  
   int phyaddr = (fpn << PAGING_ADDR_FPN_LOBIT) + off;
 
   MEMPHY_write(caller->mram,phyaddr, value);
@@ -395,15 +401,6 @@ struct vm_rg_struct* get_vm_area_node_at_brk(struct pcb_t *caller, int vmaid, in
  */
 int validate_overlap_vm_area(struct pcb_t *caller, int vmaid, int vmastart, int vmaend)
 {
-  struct vm_area_struct *vma = caller->mm->mmap;
-
-  for (; vma != NULL; vma = vma->vm_next) {
-    if (vma->vm_id == vmaid)
-      continue;
-    if ((vma->vm_start <= vmastart && vma->vm_end >= vmaend) ||
-        (vma->vm_start >= vmastart && vma->vm_end <= vmaend))
-      return -1;
-  }
 
   return 0;
 }
@@ -426,7 +423,6 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
 
   /*Validate overlap of obtained region */
   if (validate_overlap_vm_area(caller, vmaid, area->rg_start, area->rg_end) < 0) {
-    free(area);
     return -1; /*Overlap and failed allocation */
   }
 
@@ -434,7 +430,8 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
    * now will be alloc real ram region */
   cur_vma->sbrk += inc_amt;
   cur_vma->vm_end = cur_vma->sbrk;
-  enlist_vm_freerg_list(caller->mm, area);
+
+  free(area);
 
   if (vm_map_ram(caller, area->rg_start, area->rg_end, 
                     old_sbrk, incnumpage , newrg) < 0)
