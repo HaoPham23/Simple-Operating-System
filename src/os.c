@@ -102,6 +102,7 @@ static void * cpu_routine(void * args) {
 		/* Run current process */
 		run(cpu);
 		time_left--;
+		cpu->remaining_queue_time--;
 		next_slot(timer_id);
 	}
 		
