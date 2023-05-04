@@ -77,6 +77,7 @@ static void * cpu_routine(void * args) {
 		} else if (cpu->remaining_queue_time <= 0) {
 			/* The current queue has run out of time slot */
 			time_left = 0;
+			printf("\tQueue time = 0\n");
 			printf("\tCPU %d: Put process %2d to run queue\n",
 				id, cpu->cur_proc->pid);
 			put_proc(cpu->cur_proc);
@@ -94,6 +95,7 @@ static void * cpu_routine(void * args) {
 			next_slot(timer_id);
 			continue;
 		}else if (time_left == 0) {
+			printf("\tRemaining queue time: %d\n", cpu->remaining_queue_time);
 			printf("\tCPU %d: Dispatched process %2d\n",
 				id, cpu->cur_proc->pid);
 			time_left = time_slot;
