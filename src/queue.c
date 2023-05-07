@@ -8,7 +8,11 @@ int empty(struct queue_t * q) {
 }
 
 void enqueue(struct queue_t * q, struct pcb_t * proc) {
-        q->proc[q->size++] = proc;
+    if (q->size == MAX_QUEUE_SIZE) {
+		printf("	Queue size exceeded. Drop process\n");
+		return;
+	}
+	q->proc[q->size++] = proc;
 }
 
 struct pcb_t * dequeue(struct queue_t * q) {
