@@ -102,7 +102,8 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
   int old_sbrk = cur_vma->sbrk;
 
   /* INCREASE THE LIMIT */
-  inc_vma_limit(caller, vmaid, inc_sz);
+  if (inc_vma_limit(caller, vmaid, inc_sz) < 0)
+    exit(-1);
 
   /* Successful increase limit */
   caller->mm->symrgtbl[rgid].rg_start = old_sbrk;

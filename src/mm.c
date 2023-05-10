@@ -171,9 +171,7 @@ int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int inc
   /* Out of memory */
   if (ret_alloc == -3000) 
   {
-#ifdef MMDBG
      printf("OOM: vm_map_ram out of memory \n");
-#endif
      return -1;
   }
 
