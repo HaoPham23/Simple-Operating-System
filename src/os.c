@@ -56,9 +56,13 @@ static void * cpu_routine(void * args) {
 		 	* ready queue */
 			cpu->cur_proc = get_proc(cpu);
 			if (cpu->cur_proc == NULL) {
-                           next_slot(timer_id);
-                           continue; /* First load failed. skip dummy load */
-                        }
+				if (done)
+					break;
+				else {
+					next_slot(timer_id);
+					continue; /* First load failed. skip dummy load */
+				}
+            }
 		}else if (cpu->cur_proc->pc == cpu->cur_proc->code->size) {
 			/* The porcess has finish it job */
 			printf("\tCPU %d: Processed %2d has finished\n",
