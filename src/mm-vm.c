@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+int get_free_vmrg_area(struct pcb_t *caller, int vmaid, int size, struct vm_rg_struct *newrg);
+
 /*enlist_vm_freerg_list - add new rg to freerg_list
  *@mm: memory region
  *@rg_elmt: new region
@@ -111,7 +113,7 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
 
   if (old_sbrk + size < cur_vma->sbrk) {
     struct vm_rg_struct* residual_rg = malloc(sizeof(struct vm_rg_struct));
-    residual_rg->rg_start = old_sbrk + size + 1;
+    residual_rg->rg_start = old_sbrk + size;
     residual_rg->rg_end = cur_vma->sbrk;
     enlist_vm_freerg_list(caller->mm, residual_rg);
   }
@@ -485,6 +487,8 @@ int get_free_vmrg_area(struct pcb_t *caller, int vmaid, int size, struct vm_rg_s
   /* Traverse on list of free vm region to find a fit space */
   while (rgit != NULL)
   {
+      printf("vm_freerg_list->rg_start: %ld\n", rgit->rg_start);
+      printf("vm_free_list->rg_end: %ld\n\n\n", rgit->rg_end);
     if (rgit->rg_start + size <= rgit->rg_end)
     { /* Current region has enough space */
       newrg->rg_start = rgit->rg_start;
