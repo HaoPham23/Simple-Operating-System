@@ -132,8 +132,9 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
  */
 int __free(struct pcb_t *caller, int vmaid, int rgid)
 {
-  struct vm_rg_struct* rgnode = &caller->mm->symrgtbl[rgid];
-
+  struct vm_rg_struct* rgnode = malloc(sizeof(struct vm_rg_struct));
+  rgnode->rg_start = caller->mm->symrgtbl[rgid].rg_start;
+  rgnode->rg_end = caller->mm->symrgtbl[rgid].rg_end;
   if(rgid < 0 || rgid > PAGING_MAX_SYMTBL_SZ)
     return -1;
 
@@ -487,8 +488,6 @@ int get_free_vmrg_area(struct pcb_t *caller, int vmaid, int size, struct vm_rg_s
   /* Traverse on list of free vm region to find a fit space */
   while (rgit != NULL)
   {
-      printf("vm_freerg_list->rg_start: %ld\n", rgit->rg_start);
-      printf("vm_free_list->rg_end: %ld\n\n\n", rgit->rg_end);
     if (rgit->rg_start + size <= rgit->rg_end)
     { /* Current region has enough space */
       newrg->rg_start = rgit->rg_start;
