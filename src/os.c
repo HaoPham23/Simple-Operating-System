@@ -109,7 +109,7 @@ static void * cpu_routine(void * args) {
 		run(cpu);
 		time_left--;
 		cpu->remaining_queue_time--;
-		usleep(10000);
+		usleep(1000);
 		next_slot(timer_id);
 	}
 		

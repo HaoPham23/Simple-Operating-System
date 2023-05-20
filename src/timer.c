@@ -75,6 +75,7 @@ void next_slot(struct timer_id_t * timer_id) {
 		);
 	}
 	pthread_mutex_unlock(&timer_id->timer_lock);
+	usleep(1000);
 }
 
 uint64_t current_time() {
