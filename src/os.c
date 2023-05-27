@@ -229,6 +229,7 @@ static void read_config(const char * path) {
 }
 
 int main(int argc, char * argv[]) {
+	printf("%d %d\n", PAGING_ADDR_FPN_LOBIT, PAGING_ADDR_FPN_HIBIT);
 	setbuf(stdout, NULL);
 	/* Read config */
 	if (argc != 2) {
