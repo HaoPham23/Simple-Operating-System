@@ -178,18 +178,18 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
 {
   uint32_t pte = mm->pgd[pgn];
  
-  if (!PAGING_PAGE_PRESENT(pte))
+  if (!PAGING_PTE_PRESENT(pte))
   { /* Page is not online, make it actively living */
     int vicpgn, swpfpn;
     int vicfpn;
     uint32_t vicpte;
 
-    int tgtfpn = PAGING_SWP(pte);//the target frame storing our variable
+    int tgtfpn = PAGING_PTE_SWP(pte);//the target frame storing our variable
 
     /* Find victim page */
     find_victim_page(caller->mm, &vicpgn);
     vicpte = caller->mm->pgd[vicpgn];
-    vicfpn = PAGING_FPN(vicpte);
+    vicfpn = PAGING_PTE_FPN(vicpte);
 
     /* Get free frame in MEMSWP */
     MEMPHY_get_freefp(caller->active_mswp, &swpfpn);
@@ -209,7 +209,7 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
     enlist_pgn_node(&caller->mm->fifo_pgn,pgn);
   }
 
-  *fpn = PAGING_FPN(mm->pgd[pgn]);
+  *fpn = PAGING_PTE_FPN(mm->pgd[pgn]);
 
   return 0;
 }
@@ -222,8 +222,8 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
  */
 int pg_getval(struct mm_struct *mm, int addr, BYTE *data, struct pcb_t *caller)
 {
-  int pgn = PAGING_PGN(addr);
-  int off = PAGING_OFFST(addr);
+  int pgn = PAGING_ADDR_PGN(addr);
+  int off = PAGING_ADDR_OFFST(addr);
   int fpn;
 
   /* Get the page to MEMRAM, swap from MEMSWAP if needed */
@@ -245,8 +245,8 @@ int pg_getval(struct mm_struct *mm, int addr, BYTE *data, struct pcb_t *caller)
  */
 int pg_setval(struct mm_struct *mm, int addr, BYTE value, struct pcb_t *caller)
 {
-  int pgn = PAGING_PGN(addr);
-  int off = PAGING_OFFST(addr);
+  int pgn = PAGING_ADDR_PGN(addr);
+  int off = PAGING_ADDR_OFFST(addr);
   int fpn;
 
   /* Get the page to MEMRAM, swap from MEMSWAP if needed */
@@ -368,12 +368,12 @@ int free_pcb_memph(struct pcb_t *caller)
     pte = caller->mm->pgd[pagenum];
 
     //Previously: !PAGING_PAGE_PRESENT(pte)
-    if (PAGING_PAGE_PRESENT(pte))
+    if (PAGING_PTE_PRESENT(pte))
     {
-      fpn = PAGING_FPN(pte);
+      fpn = PAGING_PTE_FPN(pte);
       MEMPHY_put_freefp(caller->mram, fpn);
-    } else if (pte & PAGING_PTE_SWAPPED_MASK) {
-      fpn = PAGING_SWP(pte);
+    } else if (PAGING_PTE_SWAPPED(pte)) {
+      fpn = PAGING_PTE_SWP(pte);
       MEMPHY_put_freefp(caller->active_mswp, fpn);    
     }
   }

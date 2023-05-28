@@ -91,7 +91,7 @@ int vmap_page_range(struct pcb_t *caller, // process call
   struct framephy_struct *fpit = frames;
   //int  fpn;
   int pgit;
-  int pgn = PAGING_PGN(addr);
+  int pgn = PAGING_ADDR_PGN(addr);
 
   /* Map range of frame to address space 
    *      [addr to addr + pgnum*PAGING_PAGESZ
@@ -182,7 +182,7 @@ int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int inc
   int ret_pg;
   vmap_page_range(caller, mapstart, incpgnum, frm_lst, &ret_pg);
   if (ret_alloc == -3000) {
-    int pgn = PAGING_PGN(mapstart);
+    int pgn = PAGING_ADDR_PGN(mapstart);
     for (int pgit = ret_pg; pgit < incpgnum; ++pgit) {
       int swp_pgn;
       if (MEMPHY_get_freefp(caller->active_mswp, &swp_pgn) < 0) {
@@ -354,8 +354,8 @@ int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)
     struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, 0);
     end = cur_vma->vm_end;
   }
-  pgn_start = PAGING_PGN(start);
-  pgn_end = PAGING_PGN(end);
+  pgn_start = PAGING_ADDR_PGN(start);
+  pgn_end = PAGING_ADDR_PGN(end);
 
   printf("print_pgtbl: %d - %d", start, end);
   printf("\n");
