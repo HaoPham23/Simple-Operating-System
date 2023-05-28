@@ -153,7 +153,20 @@ int pgalloc(struct pcb_t *proc, uint32_t size, uint32_t reg_index)
 {
   int addr;
   /* By default using vmaid = 0 */
-  return __alloc(proc, 0, reg_index, size, &addr);
+  // return __alloc(proc, 0, reg_index, size, &addr);
+  int returned_val = __alloc(proc, 0, reg_index, size, &addr);
+  if(returned_val < 0) {
+    printf("allocating error: invalid size value\n");
+    return returned_val;
+  }
+#ifdef IODUMP
+  printf("allocate region=%d reg=%d\n", size, reg_index);
+#ifdef PAGETBL_DUMP
+  print_pgtbl(proc, 0, -1); //print max TBL
+#endif
+  MEMPHY_dump(proc->mram);
+#endif
+  return returned_val;
 }
 
 /*pgfree - PAGING-based free a region memory
@@ -164,7 +177,19 @@ int pgalloc(struct pcb_t *proc, uint32_t size, uint32_t reg_index)
 
 int pgfree_data(struct pcb_t *proc, uint32_t reg_index)
 {
-   return __free(proc, 0, reg_index);
+  int returned_val = __free(proc, 0, reg_index);
+  if(returned_val < 0) {
+    printf("free error: double free\n");
+    return returned_val;
+  }
+#ifdef IODUMP
+  printf("free reg=%d\n", reg_index);
+#ifdef PAGETBL_DUMP
+  print_pgtbl(proc, 0, -1); //print max TBL
+#endif
+  MEMPHY_dump(proc->mram);
+#endif
+  return returned_val;
 }
 
 /*pg_getpage - get the page in ram
@@ -230,7 +255,7 @@ int pg_getval(struct mm_struct *mm, int addr, BYTE *data, struct pcb_t *caller)
   if(pg_getpage(mm, pgn, &fpn, caller) != 0) 
     return -1; /* invalid page access */
 
-  int phyaddr = (fpn << PAGING_ADDR_FPN_LOBIT) + off;
+  int phyaddr = (fpn << 8) + off;
 
   MEMPHY_read(caller->mram,phyaddr, data);
 
@@ -253,7 +278,7 @@ int pg_setval(struct mm_struct *mm, int addr, BYTE value, struct pcb_t *caller)
   if(pg_getpage(mm, pgn, &fpn, caller) != 0) 
     return -1; /* invalid page access */
   
-  int phyaddr = (fpn << PAGING_ADDR_FPN_LOBIT) + off;
+  int phyaddr = (fpn << 8) + off;
 
   MEMPHY_write(caller->mram,phyaddr, value);
 
@@ -292,7 +317,10 @@ int pgread(
 {
   BYTE data;
   int val = __read(proc, 0, source, offset, &data);
-
+  if(val < 0) {
+    printf("reading error: not allocated or out of region range\n");
+    return val;
+  }
   destination = (uint32_t) data;
 #ifdef IODUMP
   printf("read region=%d offset=%d value=%d\n", source, offset, data);
@@ -337,6 +365,11 @@ int pgwrite(
 		uint32_t destination, // Index of destination register
 		uint32_t offset)
 {
+  int val = __write(proc, 0, destination, offset, data);
+  if (val < 0) {
+    printf("writing error: not allocated or out of region range\n");
+    return val;
+  }
 #ifdef IODUMP
   printf("write region=%d offset=%d value=%d\n", destination, offset, data);
   
@@ -348,7 +381,7 @@ int pgwrite(
   
 #endif
 
-  return __write(proc, 0, destination, offset, data);
+  return val;
 }
 
 
