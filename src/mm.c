@@ -85,7 +85,7 @@ int vmap_page_range(struct pcb_t *caller, // process call
                                 int addr, // start address which is aligned to pagesz
                                int pgnum, // num of mapping page
            struct framephy_struct *frames,// list of the mapped frames
-              struct vm_rg_struct *ret_rg)// return mapped region, the real mapped fp
+                              int *ret_pg)// unmapped pg,
 {                                         // no guarantee all given pages are mapped
   //uint32_t * pte = malloc(sizeof(uint32_t));
   struct framephy_struct *fpit = frames;
@@ -93,13 +93,15 @@ int vmap_page_range(struct pcb_t *caller, // process call
   int pgit;
   int pgn = PAGING_PGN(addr);
 
-  ret_rg->rg_end = ret_rg->rg_start = addr; // at least the very first space is usable
-
   /* Map range of frame to address space 
    *      [addr to addr + pgnum*PAGING_PAGESZ
    *      in page table caller->mm->pgd[]
    */
   for (pgit = 0; pgit < pgnum; ++pgit) {
+    if (fpit == NULL) {
+      *ret_pg = pgit;
+      return -1;
+    }
     pte_set_fpn(&caller->mm->pgd[pgn + pgit], fpit->fpn);
     fpit = fpit->fp_next;
 
@@ -151,7 +153,7 @@ int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struc
  * @incpgnum  : number of mapped page
  * @ret_rg    : returned region
  */
-int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int incpgnum, struct vm_rg_struct *ret_rg)
+int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int incpgnum)
 {
   struct framephy_struct *frm_lst = NULL;
   int ret_alloc;
@@ -172,12 +174,24 @@ int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int inc
   if (ret_alloc == -3000) 
   {
      printf("OOM: vm_map_ram out of memory \n");
-     return -1;
   }
 
   /* it leaves the case of memory is enough but half in ram, half in swap
    * do the swaping all to swapper to get the all in ram */
-  vmap_page_range(caller, mapstart, incpgnum, frm_lst, ret_rg);
+  int ret_pg;
+  vmap_page_range(caller, mapstart, incpgnum, frm_lst, &ret_pg);
+  if (ret_alloc == -3000) {
+    int pgn = PAGING_PGN(mapstart);
+    for (int pgit = ret_pg; pgit < incpgnum; ++pgit) {
+      int swp_pgn;
+      if (MEMPHY_get_freefp(caller->active_mswp, &swp_pgn) < 0) {
+        printf("vm_map_ram: Swap overflow.");
+        exit(-1);
+      }
+      pte_set_swap(&caller->mm->pgd[pgn + pgit], 0, swp_pgn);
+    }
+  }
+
 
   return 0;
 }

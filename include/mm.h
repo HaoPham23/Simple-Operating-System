@@ -97,8 +97,8 @@ int enlist_vm_rg_node(struct vm_rg_struct **rglist, struct vm_rg_struct* rgnode)
 int enlist_pgn_node(struct pgn_t **pgnlist, int pgn);
 int rg_area(struct pcb_t *caller, int vmaid, int size, struct vm_rg_struct *newrg);
 int vmap_page_range(struct pcb_t *caller, int addr, int pgnum, 
-                    struct framephy_struct *frames, struct vm_rg_struct *ret_rg);
-int vm_map_ram(struct pcb_t *caller, int astart, int send, int mapstart, int incpgnum, struct vm_rg_struct *ret_rg);
+                    struct framephy_struct *frames, int *ret_pg);
+int vm_map_ram(struct pcb_t *caller, int astart, int send, int mapstart, int incpgnum);
 int alloc_pages_range(struct pcb_t *caller, int incpgnum, struct framephy_struct **frm_lst);
 int __swap_cp_page(struct memphy_struct *mpsrc, int srcfpn,
                 struct memphy_struct *mpdst, int dstfpn) ;

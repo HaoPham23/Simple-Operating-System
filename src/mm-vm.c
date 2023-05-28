@@ -423,7 +423,6 @@ int validate_overlap_vm_area(struct pcb_t *caller, int vmaid, int vmastart, int 
  */
 int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
 {
-  struct vm_rg_struct * newrg = malloc(sizeof(struct vm_rg_struct));
   int inc_amt = PAGING_PAGE_ALIGNSZ(inc_sz);
   int incnumpage =  inc_amt / PAGING_PAGESZ;
   struct vm_rg_struct *area = get_vm_area_node_at_brk(caller, vmaid, inc_sz, inc_amt);
@@ -441,10 +440,12 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
   cur_vma->sbrk += inc_amt;
   cur_vma->vm_end = cur_vma->sbrk;
 
+  int rg_start = area->rg_start;
+  int rg_end = area->rg_end;
   free(area);
 
-  if (vm_map_ram(caller, area->rg_start, area->rg_end, 
-                    old_sbrk, incnumpage , newrg) < 0)
+  if (vm_map_ram(caller, rg_start, rg_end, 
+                    old_sbrk, incnumpage) < 0)
     return -1; /* Map the memory to MEMRAM */
 
   return 0;
