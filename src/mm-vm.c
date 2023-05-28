@@ -441,7 +441,7 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
   cur_vma->sbrk += inc_amt;
   cur_vma->vm_end = cur_vma->sbrk;
 
-  free(area);
+  //free(area);
 
   if (vm_map_ram(caller, area->rg_start, area->rg_end, 
                     old_sbrk, incnumpage , newrg) < 0)

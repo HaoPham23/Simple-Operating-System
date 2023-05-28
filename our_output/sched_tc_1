@@ -1,0 +1,127 @@
+hao@hao-virtual-machine:~/Desktop/BTL/Simple-Operating-System$ ./os sched_1
+Time slot   0
+ld_routine
+	Loaded a process at input/proc/s0, PID: 1 PRIO: 12
+Time slot   1
+	Remaining queue time: 128
+	CPU 0: Dispatched process  1
+Time slot   2
+Time slot   3
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 126
+	CPU 0: Dispatched process  1
+Time slot   4
+	Loaded a process at input/proc/s1, PID: 2 PRIO: 20
+Time slot   5
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 124
+	CPU 0: Dispatched process  1
+Time slot   6
+	Loaded a process at input/proc/s2, PID: 3 PRIO: 20
+Time slot   7
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 122
+	CPU 0: Dispatched process  1
+	Loaded a process at input/proc/s3, PID: 4 PRIO: 7
+Time slot   8
+Time slot   9
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 120
+	CPU 0: Dispatched process  1
+Time slot  10
+Time slot  11
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 118
+	CPU 0: Dispatched process  1
+Time slot  12
+Time slot  13
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 116
+	CPU 0: Dispatched process  1
+Time slot  14
+Time slot  15
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 114
+	CPU 0: Dispatched process  1
+Time slot  16
+	CPU 0: Processed  1 has finished
+	Remaining queue time: 120
+	CPU 0: Dispatched process  2
+Time slot  17
+Time slot  18
+	CPU 0: Put process  2 to run queue
+	Remaining queue time: 118
+	CPU 0: Dispatched process  3
+Time slot  19
+Time slot  20
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 116
+	CPU 0: Dispatched process  2
+Time slot  21
+Time slot  22
+	CPU 0: Put process  2 to run queue
+	Remaining queue time: 114
+	CPU 0: Dispatched process  3
+Time slot  23
+Time slot  24
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 112
+	CPU 0: Dispatched process  2
+Time slot  25
+Time slot  26
+	CPU 0: Put process  2 to run queue
+	Remaining queue time: 110
+	CPU 0: Dispatched process  3
+Time slot  27
+Time slot  28
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 108
+	CPU 0: Dispatched process  2
+Time slot  29
+	CPU 0: Processed  2 has finished
+	Remaining queue time: 107
+	CPU 0: Dispatched process  3
+Time slot  30
+Time slot  31
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 105
+	CPU 0: Dispatched process  3
+Time slot  32
+Time slot  33
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 103
+	CPU 0: Dispatched process  3
+Time slot  34
+Time slot  35
+	CPU 0: Processed  3 has finished
+	Remaining queue time: 133
+	CPU 0: Dispatched process  4
+Time slot  36
+Time slot  37
+	CPU 0: Put process  4 to run queue
+	Remaining queue time: 131
+	CPU 0: Dispatched process  4
+Time slot  38
+Time slot  39
+	CPU 0: Put process  4 to run queue
+	Remaining queue time: 129
+	CPU 0: Dispatched process  4
+Time slot  40
+Time slot  41
+	CPU 0: Put process  4 to run queue
+	Remaining queue time: 127
+	CPU 0: Dispatched process  4
+Time slot  42
+Time slot  43
+	CPU 0: Put process  4 to run queue
+	Remaining queue time: 125
+	CPU 0: Dispatched process  4
+Time slot  44
+Time slot  45
+	CPU 0: Put process  4 to run queue
+	Remaining queue time: 123
+	CPU 0: Dispatched process  4
+Time slot  46
+	CPU 0: Processed  4 has finished
+	CPU 0 stopped
+
