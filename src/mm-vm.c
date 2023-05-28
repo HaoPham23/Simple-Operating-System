@@ -365,14 +365,14 @@ int free_pcb_memph(struct pcb_t *caller)
 
   for(pagenum = 0; pagenum < PAGING_MAX_PGN; pagenum++)
   {
-    pte= caller->mm->pgd[pagenum];
+    pte = caller->mm->pgd[pagenum];
 
     //Previously: !PAGING_PAGE_PRESENT(pte)
     if (PAGING_PAGE_PRESENT(pte))
     {
       fpn = PAGING_FPN(pte);
       MEMPHY_put_freefp(caller->mram, fpn);
-    } else {
+    } else if (pte & PAGING_PTE_SWAPPED_MASK) {
       fpn = PAGING_SWP(pte);
       MEMPHY_put_freefp(caller->active_mswp, fpn);    
     }

@@ -69,6 +69,7 @@ static void * cpu_routine(void * args) {
 				id , cpu->cur_proc->pid);
 			free_pcb_memph(cpu->cur_proc);
 			free(cpu->cur_proc);
+
 			
 			cpu->cur_proc = get_proc(cpu);
 			time_left = 0;
@@ -229,7 +230,6 @@ static void read_config(const char * path) {
 }
 
 int main(int argc, char * argv[]) {
-	printf("%d %d\n", PAGING_ADDR_FPN_LOBIT, PAGING_ADDR_FPN_HIBIT);
 	setbuf(stdout, NULL);
 	/* Read config */
 	if (argc != 2) {
