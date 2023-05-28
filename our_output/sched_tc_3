@@ -1,0 +1,63 @@
+hao@hao-virtual-machine:~/Desktop/BTL/Simple-Operating-System$ ./os cus_sched_1
+Time slot   0
+ld_routine
+	Loaded a process at input/proc/p1, PID: 1 PRIO: 139
+Time slot   1
+	Remaining queue time: 1
+	CPU 0: Dispatched process  1
+	Loaded a process at input/proc/p2, PID: 2 PRIO: 138
+Time slot   2
+	Queue time = 0
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 2
+	CPU 0: Dispatched process  2
+Time slot   3
+	Loaded a process at input/proc/p3, PID: 3 PRIO: 137
+Time slot   4
+	CPU 0: Put process  2 to run queue
+	Remaining queue time: 1
+	CPU 0: Dispatched process  1
+Time slot   5
+	CPU 0: Processed  1 has finished
+	Remaining queue time: 3
+	CPU 0: Dispatched process  3
+Time slot   6
+Time slot   7
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 1
+	CPU 0: Dispatched process  3
+Time slot   8
+	Queue time = 0
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 2
+	CPU 0: Dispatched process  2
+Time slot   9
+Time slot  10
+	CPU 0: Processed  2 has finished
+	Remaining queue time: 3
+	CPU 0: Dispatched process  3
+Time slot  11
+Time slot  12
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 1
+	CPU 0: Dispatched process  3
+Time slot  13
+	Queue time = 0
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 3
+	CPU 0: Dispatched process  3
+Time slot  14
+Time slot  15
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 1
+	CPU 0: Dispatched process  3
+Time slot  16
+	Queue time = 0
+	CPU 0: Put process  3 to run queue
+	Remaining queue time: 3
+	CPU 0: Dispatched process  3
+Time slot  17
+Time slot  18
+	CPU 0: Processed  3 has finished
+	CPU 0 stopped
+

@@ -347,7 +347,7 @@ int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)
 {
   int pgn_start,pgn_end;
   int pgit;
-
+  if (caller == NULL) {printf("NULL caller\n"); return -1;}
   if(end == -1){
     pgn_start = 0;
     struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, 0);
@@ -357,8 +357,7 @@ int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)
   pgn_end = PAGING_PGN(end);
 
   printf("print_pgtbl: %d - %d", start, end);
-  if (caller == NULL) {printf("NULL caller\n"); return -1;}
-    printf("\n");
+  printf("\n");
 
 
   for(pgit = pgn_start; pgit < pgn_end; pgit++)
