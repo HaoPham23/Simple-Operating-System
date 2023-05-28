@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "mem.h": "c",
+        "common.h": "c",
+        "stdint.h": "c"
+    }
+}
