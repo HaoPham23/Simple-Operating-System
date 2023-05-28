@@ -1,6 +1,4 @@
-1 5
-calc
-calc
-calc
-calc
-calc
+100 3
+alloc 1024 1
+write 100 0 4
+free 1

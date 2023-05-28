@@ -349,9 +349,11 @@ int __write(struct pcb_t *caller, int vmaid, int rgid, int offset, BYTE value)
   struct vm_rg_struct *currg = get_symrg_byid(caller->mm, rgid);
 
   struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
+
   
-  if(currg == NULL || cur_vma == NULL) /* Invalid memory identify */
+  if(currg == NULL || cur_vma == NULL) /* Invalid memory identify */ {
 	  return -1;
+  }
 
   pg_setval(caller->mm, currg->rg_start + offset, value, caller);
 

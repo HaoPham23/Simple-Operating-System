@@ -99,8 +99,6 @@ int run(struct cpu_t * cpu) {
 		stat = 1;
 	}
 	return stat;
-
-
 }
 
 
