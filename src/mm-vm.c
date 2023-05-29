@@ -244,7 +244,10 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
     int tgtfpn = PAGING_PTE_SWP(pte);//the target frame storing our variable
 
     /* Find victim page */
-    find_victim_page(caller->mm, &vicpgn);
+    if (find_victim_page(caller->mm, &vicpgn) == -1) {
+      printf("Can not find a victim page. Possibly because the process was allocated no pages in mem on startup.");
+      return -1;
+    }
     vicpte = caller->mm->pgd[vicpgn];
     vicfpn = PAGING_PTE_FPN(vicpte);
 
