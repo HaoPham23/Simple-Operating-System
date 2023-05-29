@@ -1,0 +1,129 @@
+clone-kiwi@CloneKiwi:~/Downloads/Simple-Operating-System$ ./os cus_mem_0
+Time slot   0
+ld_routine
+	Loaded a process at input/proc/mem0, PID: 1 PRIO: 130
+Time slot   1
+	Remaining queue time: 10
+	CPU 2: Dispatched process  1
+allocate region=250 reg=0
+
+print_pgtbl: 0 - 256
+00000000: 80000000
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[250->256]
+rg[0->0]
+
+---RAM CONTENT---
+
+Time slot   2
+allocate region=750 reg=2
+
+print_pgtbl: 0 - 1024
+00000000: 80000000
+00000001: 80000003
+00000002: 80000002
+00000003: 80000001
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1006->1024]
+rg[250->256]
+rg[0->0]
+
+---RAM CONTENT---
+
+Time slot   3
+allocate region=750 reg=4
+
+print_pgtbl: 0 - 1792
+00000000: 80000000
+00000001: 80000003
+00000002: 80000002
+00000003: 80000001
+00000004: 40000000
+00000005: 40000020
+00000006: 40000040
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1774->1792]
+rg[1006->1024]
+rg[250->256]
+rg[0->0]
+
+---RAM CONTENT---
+
+Time slot   4
+write region=2 offset=123 value=23
+print_pgtbl: 0 - 1792
+00000000: 80000000
+00000001: 80000003
+00000002: 80000002
+00000003: 80000001
+00000004: 40000000
+00000005: 40000020
+00000006: 40000040
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1774->1792]
+rg[1006->1024]
+rg[250->256]
+rg[0->0]
+
+---RAM CONTENT---
+00000378: 17000000
+
+Time slot   5
+	CPU 2: Put process  1 to run queue
+	Remaining queue time: 6
+	CPU 2: Dispatched process  1
+read region=2 offset=123 value=23
+print_pgtbl: 0 - 1792
+00000000: 80000000
+00000001: 80000003
+00000002: 80000002
+00000003: 80000001
+00000004: 40000000
+00000005: 40000020
+00000006: 40000040
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1774->1792]
+rg[1006->1024]
+rg[250->256]
+rg[0->0]
+
+---RAM CONTENT---
+
+00000378: 17000000
+
+Time slot   6
+free reg=0
+print_pgtbl: 0 - 1792
+00000000: 80000000
+00000001: 80000003
+00000002: 80000002
+00000003: 80000001
+00000004: 40000000
+00000005: 40000020
+00000006: 40000040
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[0->250]
+rg[1774->1792]
+rg[1006->1024]
+rg[250->256]
+rg[0->0]
+
+---RAM CONTENT---
+00000378: 17000000
+
+Time slot   7
+	CPU 2: Processed  1 has finished
+	CPU 2 stopped
+

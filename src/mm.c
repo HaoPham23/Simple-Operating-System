@@ -175,7 +175,7 @@ int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int inc
   /* Out of memory */
   if (ret_alloc == -3000) 
   {
-     printf("OOM: vm_map_ram out of memory \n");
+     //printf("OOM: vm_map_ram out of memory \n");
   }
 
   /* it leaves the case of memory is enough but half in ram, half in swap
@@ -312,7 +312,6 @@ int print_list_rg(struct vm_rg_struct *irg)
        printf("rg[%ld->%ld]\n",rg->rg_start, rg->rg_end);
        rg = rg->rg_next;
    }
-   printf("\n");
    return 0;
 }
 
@@ -328,7 +327,6 @@ int print_list_vma(struct vm_area_struct *ivma)
        printf("va[%ld->%ld]\n",vma->vm_start, vma->vm_end);
        vma = vma->vm_next;
    }
-   printf("\n");
    return 0;
 }
 
@@ -342,7 +340,6 @@ int print_list_pgn(struct pgn_t *ip)
        printf("va[%d]-\n",ip->pgn);
        ip = ip->pg_next;
    }
-   printf("n");
    return 0;
 }
 
@@ -370,5 +367,6 @@ int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)
 
   return 0;
 }
+
 
 #endif

@@ -1,0 +1,217 @@
+clone-kiwi@CloneKiwi:~/Downloads/Simple-Operating-System$ ./os cus_mem_1
+Time slot   0
+ld_routine
+	Loaded a process at input/proc/mem1, PID: 1 PRIO: 130
+Time slot   1
+	Remaining queue time: 10
+	CPU 0: Dispatched process  1
+allocate region=500 reg=2
+
+print_pgtbl: 0 - 512
+00000000: 80000001
+00000001: 80000000
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+
+Time slot   2
+allocate region=1000 reg=4
+
+print_pgtbl: 0 - 1536
+00000000: 80000001
+00000001: 80000000
+00000002: 40000000
+00000003: 40000020
+00000004: 40000040
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+
+Time slot   3
+write region=2 offset=4 value=100
+print_pgtbl: 0 - 1536
+00000000: 80000001
+00000001: 80000000
+00000002: 40000000
+00000003: 40000020
+00000004: 40000040
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+00000104: 00000064
+
+Time slot   4
+write region=4 offset=700 value=100
+print_pgtbl: 0 - 1536
+00000000: 40000080
+00000001: 80000000
+00000002: 40000000
+00000003: 40000020
+00000004: 80000001
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+000001bc: 00000064
+
+Time slot   5
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 6
+	CPU 0: Dispatched process  1
+write region=2 offset=100 value=123
+print_pgtbl: 0 - 1536
+00000000: 80000000
+00000001: 40000040
+00000002: 40000000
+00000003: 40000020
+00000004: 80000001
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+00000004: 00000064
+00000064: 0000007b
+000001bc: 00000064
+
+Time slot   6
+write region=4 offset=100 value=20
+print_pgtbl: 0 - 1536
+00000000: 80000000
+00000001: 40000040
+00000002: 80000001
+00000003: 40000020
+00000004: 40000080
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+00000004: 00000064
+00000064: 0000007b
+00000164: 00000014
+
+Time slot   7
+read region=4 offset=700 value=100
+print_pgtbl: 0 - 1536
+00000000: 40000000
+00000001: 40000040
+00000002: 80000001
+00000003: 40000020
+00000004: 80000000
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+
+000000bc: 00000064
+00000164: 00000014
+
+Time slot   8
+read region=2 offset=100 value=123
+print_pgtbl: 0 - 1536
+00000000: 80000001
+00000001: 40000040
+00000002: 40000080
+00000003: 40000020
+00000004: 80000000
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+
+000000bc: 00000064
+00000104: 00000064
+00000164: 0000007b
+
+Time slot   9
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 2
+	CPU 0: Dispatched process  1
+free reg=2
+print_pgtbl: 0 - 1536
+00000000: 80000001
+00000001: 40000040
+00000002: 40000080
+00000003: 40000020
+00000004: 80000000
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[0->500]
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+000000bc: 00000064
+00000104: 00000064
+00000164: 0000007b
+
+Time slot  10
+free reg=4
+print_pgtbl: 0 - 1536
+00000000: 80000001
+00000001: 40000040
+00000002: 40000080
+00000003: 40000020
+00000004: 80000000
+00000005: 40000060
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[512->1512]
+rg[0->500]
+rg[1512->1536]
+rg[500->512]
+rg[0->0]
+
+---RAM CONTENT---
+000000bc: 00000064
+00000104: 00000064
+00000164: 0000007b
+
+Time slot  11
+	CPU 0: Processed  1 has finished
+	CPU 0 stopped
+

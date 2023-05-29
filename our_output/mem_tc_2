@@ -1,0 +1,73 @@
+clone-kiwi@CloneKiwi:~/Downloads/Simple-Operating-System$ ./os cus_mem_2
+Time slot   0
+ld_routine
+	Loaded a process at input/proc/mem2, PID: 1 PRIO: 130
+Time slot   1
+	Remaining queue time: 10
+	CPU 0: Dispatched process  1
+allocate region=1 reg=0
+
+print_pgtbl: 0 - 256
+00000000: 80000000
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1->256]
+rg[0->0]
+
+---RAM CONTENT---
+
+Time slot   2
+writing error: not allocated or out of region range
+Time slot   3
+write region=0 offset=0 value=10
+print_pgtbl: 0 - 256
+00000000: 80000000
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1->256]
+rg[0->0]
+
+---RAM CONTENT---
+00000000: 0000000a
+
+Time slot   4
+reading error: not allocated or out of region range
+Time slot   5
+	CPU 0: Put process  1 to run queue
+	Remaining queue time: 6
+	CPU 0: Dispatched process  1
+read region=0 offset=0 value=10
+print_pgtbl: 0 - 256
+00000000: 80000000
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[1->256]
+rg[0->0]
+
+---RAM CONTENT---
+
+00000000: 0000000a
+
+Time slot   6
+free reg=0
+print_pgtbl: 0 - 256
+00000000: 80000000
+
+---FREE LIST REGION---
+print_list_rg: 
+rg[0->1]
+rg[1->256]
+rg[0->0]
+
+---RAM CONTENT---
+00000000: 0000000a
+
+Time slot   7
+free error: double free
+Time slot   8
+	CPU 0: Processed  1 has finished
+	CPU 0 stopped
+

@@ -136,7 +136,8 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
  */
 int __free(struct pcb_t *caller, int vmaid, int rgid)
 {
-  if(rgid < 0 || rgid > PAGING_MAX_SYMTBL_SZ)
+  if(rgid < 0 || rgid > PAGING_MAX_SYMTBL_SZ || 
+  caller->mm->symrgtbl[rgid].rg_start==caller->mm->symrgtbl[rgid].rg_end)
     return -1;
 
   caller->mm->rg_allocated[rgid] = 0;
@@ -147,6 +148,11 @@ int __free(struct pcb_t *caller, int vmaid, int rgid)
   /*enlist the obsoleted memory region */
   enlist_vm_freerg_list(caller->mm, rgnode);
 
+
+	/*set the region of reg to 0*/
+  caller->mm->symrgtbl[rgid].rg_start = caller->mm->symrgtbl[rgid].rg_end = 0;
+  caller->mm->symrgtbl[rgid].rg_next = NULL;	
+	
   return 0;
 }
 
@@ -166,11 +172,21 @@ int pgalloc(struct pcb_t *proc, uint32_t size, uint32_t reg_index)
     return returned_val;
   }
 #ifdef IODUMP
-  printf("allocate region=%d reg=%d\n", size, reg_index);
+  printf("allocate region=%d reg=%d\n\n", size, reg_index);
 #ifdef PAGETBL_DUMP
   print_pgtbl(proc, 0, -1); //print max TBL
 #endif
+
+#ifdef FREELIST_DUMP
+	printf("\n---FREE LIST REGION---\n");
+	print_list_rg(proc->mm->mmap->vm_freerg_list);
+#endif
+
+#ifdef RAM_DUMP
+	printf("\n---RAM CONTENT---\n");
   MEMPHY_dump(proc->mram);
+#endif
+	printf("\n");
 #endif
   return returned_val;
 }
@@ -193,7 +209,17 @@ int pgfree_data(struct pcb_t *proc, uint32_t reg_index)
 #ifdef PAGETBL_DUMP
   print_pgtbl(proc, 0, -1); //print max TBL
 #endif
+
+#ifdef FREELIST_DUMP
+	printf("\n---FREE LIST REGION---\n");
+	print_list_rg(proc->mm->mmap->vm_freerg_list);
+#endif
+
+#ifdef RAM_DUMP
+	printf("\n---RAM CONTENT---\n");
   MEMPHY_dump(proc->mram);
+#endif  
+	printf("\n");
 #endif
   return returned_val;
 }
@@ -238,6 +264,8 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
     pte_set_fpn(&caller->mm->pgd[pgn], vicfpn);
 
     enlist_pgn_node(&caller->mm->fifo_pgn,pgn);
+    
+    MEMPHY_put_freefp(caller->active_mswp,tgtfpn);
   }
 
   *fpn = PAGING_PTE_FPN(mm->pgd[pgn]);
@@ -305,7 +333,7 @@ int __read(struct pcb_t *caller, int vmaid, int rgid, int offset, BYTE *data)
 
   struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
 
-  if(currg == NULL || cur_vma == NULL) /* Invalid memory identify */
+  if(currg == NULL || cur_vma == NULL || currg->rg_start==currg->rg_end || currg->rg_end <= currg->rg_start + offset) /* Invalid memory identify */
 	  return -1;
 
   pg_getval(caller->mm, currg->rg_start + offset, data, caller);
@@ -333,10 +361,19 @@ int pgread(
   
 #ifdef PAGETBL_DUMP
   print_pgtbl(proc, 0, -1); //print max TBL
-  
 #endif
+
+#ifdef FREELIST_DUMP
+	printf("\n---FREE LIST REGION---\n");
+	print_list_rg(proc->mm->mmap->vm_freerg_list);
+#endif
+
+#ifdef RAM_DUMP
+	printf("\n---RAM CONTENT---\n\n");
   MEMPHY_dump(proc->mram);
-  
+#endif
+	printf("\n");
+
 #endif
 
   return val;
@@ -357,7 +394,7 @@ int __write(struct pcb_t *caller, int vmaid, int rgid, int offset, BYTE value)
   struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
 
   
-  if(currg == NULL || cur_vma == NULL) /* Invalid memory identify */ {
+  if(currg == NULL || cur_vma == NULL || currg->rg_start==currg->rg_end || currg->rg_end <= currg->rg_start + offset) /* Invalid memory identify */ {
 	  return -1;
   }
 
@@ -383,10 +420,18 @@ int pgwrite(
   
 #ifdef PAGETBL_DUMP
   print_pgtbl(proc, 0, -1); //print max TBL
-  
 #endif
+
+#ifdef FREELIST_DUMP
+	printf("\n---FREE LIST REGION---\n");
+	print_list_rg(proc->mm->mmap->vm_freerg_list);
+#endif
+
+#ifdef RAM_DUMP
+	printf("\n---RAM CONTENT---\n");
   MEMPHY_dump(proc->mram);
-  
+#endif
+  printf("\n");
 #endif
 
   return val;
@@ -501,11 +546,21 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz)
 int find_victim_page(struct mm_struct *mm, int *retpgn) 
 {
   if (mm->fifo_pgn != NULL) {
-    struct pgn_t *pg = mm->fifo_pgn;
-
-    *retpgn = pg->pgn;
-
-    free(pg);
+	struct pgn_t* pPage = NULL;
+  	struct pgn_t* lPage = mm->fifo_pgn;
+  	while (lPage->pg_next!=NULL){
+  		pPage = lPage;
+  		lPage = lPage->pg_next;
+  	}
+  	*retpgn = lPage->pgn;
+  	if (pPage == NULL){
+  		mm->fifo_pgn = lPage->pg_next;
+  	}
+  	else {
+  		pPage->pg_next = lPage->pg_next; 
+  	}
+  	
+    free(lPage);
 
     return 0;
   }

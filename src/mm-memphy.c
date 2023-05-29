@@ -167,7 +167,6 @@ int MEMPHY_get_freefp(struct memphy_struct *mp, int *retfpn)
 
 int MEMPHY_dump(struct memphy_struct * mp)
 {
-   printf("\n");
    uint32_t* word_storage = (uint32_t*)mp->storage;
    for (int i = 0; i < mp->maxsz / 4; ++i)
       if (word_storage[i] != 0)

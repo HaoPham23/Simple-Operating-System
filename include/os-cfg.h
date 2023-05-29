@@ -10,5 +10,7 @@
 //#define MMDBG 1
 #define IODUMP 1
 #define PAGETBL_DUMP 1
+#define FREELIST_DUMP 1
+#define RAM_DUMP 1
 
 #endif
