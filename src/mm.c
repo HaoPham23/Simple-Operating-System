@@ -1,4 +1,5 @@
 #include "os-mm.h"
+#include <string.h>
 
 #ifdef MM_PAGING
 /*
@@ -236,6 +237,7 @@ int init_mm(struct mm_struct *mm, struct pcb_t *caller)
     CLRBIT(mm->pgd[i], PAGING_PTE_SWAPPED_MASK);
   }
 
+  memset(mm->rg_allocated, 0, sizeof mm->rg_allocated);
   /* By default the owner comes with at least one vma */
   vma->vm_id = 1;
   vma->vm_start = 0;
